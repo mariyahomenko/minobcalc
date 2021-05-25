@@ -8,6 +8,7 @@ from win4 import Ui_MainWindow4
 import sys
 import ctypes
 from decimal import Decimal
+import re
 
 
 app = QtWidgets.QApplication(sys.argv)
@@ -98,20 +99,52 @@ def calc_k1():
         k1_3 = ui2.lineEdit_3.text()
         k1_4 = ui2.lineEdit_4.text()
         k1_5 = ui2.lineEdit_5.text()
+        reg = re.compile('[^0-9.,]')
+        k1_1 = reg.sub('', k1_1)
+        k1_2 = reg.sub('', k1_2)
+        k1_3 = reg.sub('', k1_3)
+        k1_4 = reg.sub('', k1_4)
+        k1_5 = reg.sub('', k1_5)
+        reg2 = re.compile('[^0-9]')
+        k1_1 = reg2.sub('.', k1_1)
+        k1_2 = reg2.sub('.', k1_2)
+        k1_3 = reg2.sub('.', k1_3)
+        k1_4 = reg2.sub('.', k1_4)
+        k1_5 = reg2.sub('.', k1_5)
+        ui2.lineEdit.setText(k1_1)
+        ui2.lineEdit_2.setText(k1_2)
+        ui2.lineEdit_3.setText(k1_3)
+        ui2.lineEdit_4.setText(k1_4)
+        ui2.lineEdit_5.setText(k1_5)
         if k1_1 == '':
             k1_1 = 0
+        if Decimal(k1_1) > 0.2:
+            k1_1 = 0.2
+            ui2.lineEdit.setText('0.2')
         if k1_2 == '':
             k1_2 = 0
+        if Decimal(k1_2) > 0.2:
+            k1_2 = 0.2
+            ui2.lineEdit_2.setText('0.2')
         if k1_3 == '':
             k1_3 = 0
+        if Decimal(k1_3) > 0.2:
+            k1_3 = 0.2
+            ui2.lineEdit_3.setText('0.2')
         if k1_4 == '':
             k1_4 = 0
+        if Decimal(k1_4) > 0.2:
+            k1_4 = 0.2
+            ui2.lineEdit_4.setText('0.2')
         if k1_5 == '':
             k1_5 = 0
+        if Decimal(k1_5) > 0.2:
+            k1_5 = 0.2
+            ui2.lineEdit_5.setText('0.2')
         k1 = Decimal(k1_1) + Decimal(k1_2) + Decimal(k1_3) + Decimal(k1_4) + Decimal(k1_5)
-        if k1 <= 1:
-            ui2.lineEdit_6.setText(str(k1))
-            globs.k1 = k1
+        if Decimal(k1) < 1.1:
+            ui2.lineEdit_6.setText(str(round(k1, 2)))
+            globs.k1 = round(k1, 2)
         else:
             ui2.lineEdit_6.setText('...')
     except:
@@ -125,9 +158,9 @@ def k2_1():
         ui3.checkBox.setEnabled(True)
         ui3.checkBox_2.setEnabled(False)
         ui3.checkBox_3.setEnabled(False)
-        globs.k2 = 1
+        globs.k2 = Decimal(1)
     else:
-        globs.k2 = 0
+        globs.k2 = Decimal(0)
         ui3.checkBox.setEnabled(True)
         ui3.checkBox_2.setEnabled(True)
         ui3.checkBox_3.setEnabled(True)
@@ -141,9 +174,9 @@ def k2_2():
         ui3.checkBox.setEnabled(False)
         ui3.checkBox_2.setEnabled(True)
         ui3.checkBox_3.setEnabled(False)
-        globs.k2 = 2
+        globs.k2 = Decimal(2)
     else:
-        globs.k2 = 0
+        globs.k2 = Decimal(0)
         ui3.checkBox.setEnabled(True)
         ui3.checkBox_2.setEnabled(True)
         ui3.checkBox_3.setEnabled(True)
@@ -157,9 +190,9 @@ def k2_3():
         ui3.checkBox.setEnabled(False)
         ui3.checkBox_2.setEnabled(False)
         ui3.checkBox_3.setEnabled(True)
-        globs.k2 = 3
+        globs.k2 = Decimal(3)
     else:
-        globs.k2 = 0
+        globs.k2 = Decimal(0)
         ui3.checkBox.setEnabled(True)
         ui3.checkBox_2.setEnabled(True)
         ui3.checkBox_3.setEnabled(True)
@@ -169,14 +202,23 @@ def k2_3():
 def total():
     try:
         totalk = globs.k1 * globs.k2
+        reg = re.compile('[^0-9.,]')
+        reg2 = re.compile('[^0-9]')
         n1 = ui4.lineEdit.text()
+        n1 = reg.sub('', n1)
+        n1 = reg2.sub('.', n1)
+        ui4.lineEdit.setText(n1)
         n2 = ui4.lineEdit_2.text()
+        n2 = reg.sub('', n2)
+        n2 = reg2.sub('.', n2)
+        ui4.lineEdit_2.setText(n2)
+
         if n1 == '':
             n1 = 0
         if n2 == '':
             n2 = 0
         n3 = Decimal(n1) / Decimal(n2) * Decimal(totalk)
-        ui4.lineEdit_3.setText(str(n3))
+        ui4.lineEdit_3.setText(str(round(n3, 2)))
     except:
         ui4.lineEdit_3.setText('...')
 
